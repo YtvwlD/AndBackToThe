@@ -5,6 +5,7 @@
       android:versionName="1.0">
     <uses-sdk android:minSdkVersion="9"
         android:targetSdkVersion="23"/>
+    <uses-permission android:name="android.permission.BACKUP"/>
     <application android:label="@string/app_name" android:icon="@drawable/ic_launcher">
         <activity android:name="main"
                   android:label="@string/app_name">
