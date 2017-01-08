@@ -6,10 +6,12 @@ import android.app.backup.BackupManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import java.lang.reflect.InvocationTargetException;
 
 public class Main extends Activity
 {
+    private static final String TAG = "AndBackToThe";
     private Context context = this;
     private BackupManager backupManager;
 
@@ -25,12 +27,12 @@ public class Main extends Activity
         {
           boolean backupEnabled = (boolean)(backupManager.getClass().getMethod("isBackupEnabled").invoke(backupManager));
           String currentTransport = (String)(backupManager.getClass().getMethod("getCurrentTransport").invoke(backupManager));
-          System.err.println("Backup enabled: " + backupEnabled);
-          System.err.println("Transport: " + currentTransport);
+          Log.v(TAG, "Backup enabled: " + backupEnabled);
+          Log.v(TAG, "Transport: " + currentTransport);
         }
         catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e)
         {
-          System.err.println("Must be a system app.");
+          Log.e(TAG, "Must be a system app.");
           AlertDialog.Builder builder = new AlertDialog.Builder(this);
           builder.setMessage(R.string.dialog_no_system_app)
                  .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
