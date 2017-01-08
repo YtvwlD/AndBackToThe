@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">And Back To The</string>
+    <string name="dialog_no_system_app">This app has to be a system app to work. (Hint: Place it in /system/priv-app/ instead of /data/app/.)</string>
 </resources>

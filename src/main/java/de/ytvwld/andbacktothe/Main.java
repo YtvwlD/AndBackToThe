@@ -1,8 +1,10 @@
 package de.ytvwld.andbacktothe;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.backup.BackupManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import java.lang.reflect.InvocationTargetException;
 
@@ -29,6 +31,14 @@ public class Main extends Activity
         catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e)
         {
           System.err.println("Must be a system app.");
+          AlertDialog.Builder builder = new AlertDialog.Builder(this);
+          builder.setMessage(R.string.dialog_no_system_app)
+                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                   public void onClick(DialogInterface dialog, int id) {
+                     System.exit(-1);
+                   }
+                 });
+          builder.create().show();
         }
     }
 }
