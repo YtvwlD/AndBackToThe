@@ -68,19 +68,40 @@ public class Main extends Activity
           // set the listeners
 
           toggleBackup.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton button, boolean isChecked) {
-              Log.v(TAG, "Setting backup to: " + isChecked);
-              try
+            public void onCheckedChanged(CompoundButton button, final boolean isChecked) {
+              if (isChecked == backupEnabled)
               {
-                backupManager.getClass().getMethod("setBackupEnabled", new Class[] {boolean.class}).invoke(backupManager, isChecked);
-                backupEnabled = isChecked;
+                Log.v(TAG, "No change has been made, ignoring.");
+                return;
               }
-              catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e)
-              {
-                Log.wtf(TAG, "We are a system app, but couldn't enable or disable the backup.");
-                Log.wtf(TAG, e);
-                System.exit(-1);
-              }
+              AlertDialog.Builder builder = new AlertDialog.Builder(context);
+              if(isChecked)
+                builder.setMessage(R.string.dialog_confirm_enable);
+              else
+                builder.setMessage(R.string.dialog_confirm_disable);
+              builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener () {
+                public void onClick(DialogInterface dialog, int id) {
+                  Log.v(TAG, "Setting backup to: " + isChecked);
+                  try
+                  {
+                    backupManager.getClass().getMethod("setBackupEnabled", new Class[] {boolean.class}).invoke(backupManager, isChecked);
+                    backupEnabled = isChecked;
+                  }
+                  catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e)
+                  {
+                    Log.wtf(TAG, "We are a system app, but couldn't enable or disable the backup.");
+                    Log.wtf(TAG, e);
+                    System.exit(-1);
+                  }
+                }
+              });
+              builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener () {
+                public void onClick(DialogInterface dialog, int id) {
+                  // reset the switch to its original position
+                  toggleBackup.setChecked(backupEnabled);
+                }
+              });
+              builder.create().show();
             }
           });
 

@@ -4,4 +4,6 @@
     <string name="dialog_no_system_app">This app has to be a system app to work. (Hint: Place it in /system/priv-app/ instead of /data/app/.)</string>
     <string name="view_backup_is_enabled">Enable Backup?</string>
     <string name="view_current_transport">Transport to use:</string>
+    <string name="dialog_confirm_enable">Do you really want to enable the backup? The data of your apps (not the apps itself!) is going to be sent to a (possibly remote) location. Do you want to continue?</string>
+    <string name="dialog_confirm_disable">Do you really want to disable the backup? This will delete all your previous backups! Do you want to continue?</string>
 </resources>
