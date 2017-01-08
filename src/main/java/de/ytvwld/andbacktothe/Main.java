@@ -23,6 +23,9 @@ public class Main extends Activity
     private BackupManager backupManager;
     private Switch toggleBackup;
     private Spinner currentTransportSpinner;
+    private String currentTransport;
+    private boolean backupEnabled;
+    private String[] availableTransports;
 
     /** Called when the activity is first created. */
     @Override
@@ -42,9 +45,9 @@ public class Main extends Activity
         {
           // load the data
 
-          boolean backupEnabled = (boolean)(backupManager.getClass().getMethod("isBackupEnabled").invoke(backupManager));
-          String currentTransport = (String)(backupManager.getClass().getMethod("getCurrentTransport").invoke(backupManager));
-          String[] availableTransports = (String[])(backupManager.getClass().getMethod("listAllTransports").invoke(backupManager));
+          backupEnabled = (boolean)(backupManager.getClass().getMethod("isBackupEnabled").invoke(backupManager));
+          currentTransport = (String)(backupManager.getClass().getMethod("getCurrentTransport").invoke(backupManager));
+          availableTransports = (String[])(backupManager.getClass().getMethod("listAllTransports").invoke(backupManager));
           // move the current transport to the first position
           availableTransports[Arrays.asList(availableTransports).indexOf(currentTransport)] = availableTransports[0];
           availableTransports[0] = currentTransport;
@@ -70,6 +73,7 @@ public class Main extends Activity
               try
               {
                 backupManager.getClass().getMethod("setBackupEnabled", new Class[] {boolean.class}).invoke(backupManager, isChecked);
+                backupEnabled = isChecked;
               }
               catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e)
               {
@@ -84,10 +88,16 @@ public class Main extends Activity
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id)
             {
               String selected = (String)parent.getItemAtPosition(pos);
+              if (selected == currentTransport)
+              {
+                Log.v(TAG, "User selected the already used transport, ignoring.");
+                return;
+              }
               Log.v(TAG, "User selected: " + selected);
               try
               {
                 backupManager.getClass().getMethod("selectBackupTransport", new Class[] {String.class}).invoke(backupManager, selected);
+                currentTransport = selected;
               }
               catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e)
               {
